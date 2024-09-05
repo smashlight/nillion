@@ -37,7 +37,7 @@ Copy the `CONTAINER_ID` of nillion docker container
 Now replace the `CONTAINER_ID` in the below command and then execute the below command
 
 ```bash
-docker logs CONTAINER_ID | grep "Secret stores Found"
+docker logs CONTAINER_ID -n 200 | grep "Secret stores Found"
 ```
 
 - **Issue : Secret found 0 but registered True**
@@ -54,21 +54,25 @@ Then, re-run using the below commands, make sure to replace `CONTAINER_ID` in th
 docker restart CONTAINER_ID
 ```
 ```bash
-sudo docker run -v ./nillion/accuser:/var/tmp nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://nillion-testnet.rpc.kjnodes.com" --block-start "$(curl -s https://testnet-nillion-rpc.lavenderfive.com/abci_info | jq -r '.result.response.last_block_height')"
+docker logs CONTAINER_ID -n 200 | grep "Secret stores Found"
 ```
 
 - **Issue : Error from tendermint rpc/ Operation timed out**
 
 Don't forget to replace `ENTER_YOUR_KEPLR_WALLET_NILLION_ADDRESS` in the below command
 ```bash
-sudo docker run -v "$(pwd)/nillion/accuser:/var/tmp" nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://nillion-testnet.rpc.kjnodes.com" --block-start "$(curl -s "https://testnet-nillion-api.lavenderfive.com/cosmos/tx/v1beta1/txs?query=message.sender='ENTER_YOUR_KEPLR_WALLET_NILLION_ADDRESS'&pagination.limit=20&pagination.offset=0" | jq -r '[.tx_responses[] | select(.tx.body.memo == "AccusationRegistrationMessage")] | sort_by(.height | tonumber) | .[-1].height | tonumber - 5' | bc)"
+sudo docker run -v "$(pwd)/nillion/accuser:/var/tmp" nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://nillion-testnet.rpc.nodex.one" --block-start "$(curl -s "https://testnet-nillion-api.lavenderfive.com/cosmos/tx/v1beta1/txs?query=message.sender='ENTER_YOUR_KEPLR_WALLET_NILLION_ADDRESS'&pagination.limit=20&pagination.offset=0" | jq -r '[.tx_responses[] | select(.tx.body.memo == "AccusationRegistrationMessage")] | sort_by(.height | tonumber) | .[-1].height | tonumber - 5' | bc)"
 ```
 
 - **I am running nillion verifier on my Ubuntu (Windows), After closing the PC when I will reopen  my PC to run verifier node which command I need to paste ?**
+
+First search for all docker containers and then copy the CONTAINER_ID of nillion, if there is more than 1 nillion related containers then choose the container which is on the top of the list and copy its `CONTAINER_ID`
+
 ```bash
-sudo docker run -v ./nillion/accuser:/var/tmp nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://nillion-testnet.rpc.kjnodes.com" --block-start "$(curl -s https://testnet-nillion-rpc.lavenderfive.com/abci_info | jq -r '.result.response.last_block_height')"
+docker ps -a
 ```
-Or
+After copying  the `CONTAINER_ID` , use the below command but make sure to replace `CONTAINER_ID` with the original `CONTAINER ID` you copied in the above steps
+
 ```bash
-sudo docker run -v ./nillion/accuser:/var/tmp nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://testnet-nillion-rpc.lavenderfive.com/" --block-start "$(curl -s https://testnet-nillion-rpc.lavenderfive.com/abci_info | jq -r '.result.response.last_block_height')"
+docker restart CONTAINER_ID
 ```
