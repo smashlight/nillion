@@ -2,12 +2,6 @@
 
 echo ""
 
-if [[ ! "$FOLLOWED" =~ ^[yY]$ ]]; then
-    echo ""
-    echo "Please follow @ZunXBT on X before proceeding."
-    exit 1
-fi
-
 if ! command -v docker &> /dev/null; then
     echo ""
     echo "Docker not found. Installing Docker..."
