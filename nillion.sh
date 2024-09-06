@@ -38,7 +38,7 @@ sudo docker ps -a | grep nillion | awk '{print $1}' | xargs -r docker rm
 
 echo ""
 echo "Pulling NILLION docker image..."
-sudo docker pull nillion/retailtoken-accuser:latest
+sudo docker pull nillion/retailtoken-accuser:v1.0.1
 
 echo ""
 echo "Creating directory and running Docker container to initialize..."
@@ -78,7 +78,7 @@ if [ -f "$SECRET_FILE" ]; then
                 if [[ "$private_key_saved" =~ ^[yY]$ ]]; then
                     echo ""
                     echo "Running Docker container with accuse command..."
-                    sudo docker run -v "$(pwd)/nillion/accuser:/var/tmp" nillion/retailtoken-accuser:latest accuse --rpc-endpoint "https://nillion-testnet.rpc.nodex.one" --block-start "$(curl -s "https://testnet-nillion-api.lavenderfive.com/cosmos/tx/v1beta1/txs?query=message.sender='$KEPLR'&pagination.limit=20&pagination.offset=0" | jq -r '[.tx_responses[] | select(.tx.body.memo == "AccusationRegistrationMessage")] | sort_by(.height | tonumber) | .[-1].height | tonumber - 5' | bc)"
+                    sudo docker run -v "$(pwd)/nillion/accuser:/var/tmp" nillion/retailtoken-accuser:v1.0.1 accuse --rpc-endpoint "https://nillion-testnet.rpc.nodex.one" --block-start "$(curl -s "https://testnet-nillion-api.lavenderfive.com/cosmos/tx/v1beta1/txs?query=message.sender='$KEPLR'&pagination.limit=20&pagination.offset=0" | jq -r '[.tx_responses[] | select(.tx.body.memo == "AccusationRegistrationMessage")] | sort_by(.height | tonumber) | .[-1].height | tonumber - 5' | bc)"
                 else
                     echo ""
                     echo "Please save the private key and try again."
