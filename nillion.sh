@@ -1,8 +1,6 @@
 #!/bin/bash
 
 echo ""
-echo "Follow: https://x.com/ZunXBT"
-read -p "Have you followed @ZunXBT on X? (y/Y to proceed): " FOLLOWED
 
 if [[ ! "$FOLLOWED" =~ ^[yY]$ ]]; then
     echo ""
